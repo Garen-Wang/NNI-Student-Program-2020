@@ -1,6 +1,53 @@
-https://www.cs.toronto.edu/~kriz/cifar.html
+# Task2 进阶任务 HPO+NAS
 
-https://en.wikipedia.org/wiki/CIFAR-10
+## Task 2.1
+
+### CIFAR10简介
+
+CIFAR10数据集共有60000张分辨率为32*32的彩色图像，分为十类，每类都有6000张图像。
+
+50000张图像构成训练集，10000张图像构成测试集。
+
+![](./Images/1.png)
+
+### 实现流程
+
+我们使用PyTorch编写卷积神经网络来解决这项图像分类任务。
+
+大体流程如下：
+
+1. 使用torchvision下载数据集，读取数据集
+2. 定义解决该问题的卷积神经网络
+3. 训练神经网络
+4. 测试神经网络
+
+代码中的神经网络有两个卷积层：
+
+1. 第一层，3个输入（RGB），6个输出。
+2. 第二层，6个输入，16个输出。
+
+池化层通过`torch.nn.MaxPool2d`来创建。
+
+然后定义三个全连接函数：
+1. 第一个，将16\*5\*5个节点连接至120个节点。
+2. 第二个，将120个节点连接到84个节点。
+3. 第三个，将84个节点连接到10个节点，对应分类。
+
+激活函数全程使用Relu函数。
+
+### 实验配置
+
+使用Anaconda环境下的Python3.8，使用PyCharm运行程序。
+
+设置程序不使用GPU，只用CPU完成训练。
+
+### 代码分析
+
+我们利用了`torch.nn`模块定义了本任务的神经网络。
+
+### 结果分析
+
+经10个epoch的训练，最终输出结果如下：
 
 ```
 C:\Users\12058\anaconda3\python.exe C:/Users/12058/Documents/GitHub/nni-learning/task2/2.1/main.py
@@ -80,3 +127,11 @@ Testing Finished
 Process finished with exit code 0
 
 ```
+可以看出，损失值总体稳定下降，对车、飞机、船等图像分类准确率较高，而对猫、狗、卡车等图像的准确率较不理想。
+
+如何提高部分不理想的分类准确率？请看Task 2.2......
+
+
+## Task 2.2
+
+to be continued...
