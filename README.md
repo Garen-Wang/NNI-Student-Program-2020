@@ -6,4 +6,4 @@
 4. 任务完成情况：
 - [x] Task1
 - [x] Task2.1
-5. Github Repo地址：https://github.com/Garen-Wang/nni-learning
+5. Github Repo地址：https://github.com/Garen-Wang/NNI-Student-Program-2020
