@@ -31,9 +31,13 @@ CIFAR10数据集共有60000张分辨率为32*32的彩色图像，分为十类，
 然后定义三个全连接函数：
 1. 第一个，将16\*5\*5个节点连接至120个节点。
 2. 第二个，将120个节点连接到84个节点。
-3. 第三个，将84个节点连接到10个节点，对应分类。
+3. 第三个，将84个节点连接到10个节点，即对应分类。
 
 激活函数全程使用Relu函数。
+
+误差函数使用交叉熵函数，优化方法使用SGD。
+
+
 
 ### 实验配置
 
@@ -44,6 +48,55 @@ CIFAR10数据集共有60000张分辨率为32*32的彩色图像，分为十类，
 ### 代码分析
 
 我们利用了`torch.nn`模块定义了本任务的神经网络。
+
+
+```python
+class NeuralNet(nn.Module):
+    def __init__(self):
+        super(NeuralNet, self).__init__()
+        self.conv1 = nn.Conv2d(3, 6, 5)
+        self.pool = nn.MaxPool2d(2, 2)
+        self.conv2 = nn.Conv2d(6, 16, 5)
+        self.func1 = nn.Linear(16 * 5 * 5, 120)
+        self.func2 = nn.Linear(120, 84)
+        self.func3 = nn.Linear(84, 10)
+
+    def forward(self, x):
+        x = self.pool(F.relu(self.conv1(x)))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = x.view(-1, 16 * 5 * 5)
+        x = F.relu(self.func1(x))
+        x = F.relu(self.func2(x))
+        x = self.func3(x)
+        return x
+
+```
+
+而训练过程中，使用PyTorch的写法是这样的：
+
+```python
+def train(trainloader, path):
+    neuralnet = NeuralNet()
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.SGD(neuralnet.parameters(), lr=0.001, momentum=0.9)
+    for epoch in range(10):
+        running_loss = 0.0
+        for i, data in enumerate(trainloader, 0):
+            inputs, labels = data
+            optimizer.zero_grad()
+            outputs = neuralnet(inputs)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+            running_loss += loss.item()
+
+            if i % 2000 == 1999:
+                print('[%5d, %5d] loss = %.5f' % (epoch + 1, i + 1, running_loss / 2000))
+                running_loss = 0.0
+
+    torch.save(neuralnet.state_dict(), path)
+    print('Training Finished')
+```
 
 ### 结果分析
 
