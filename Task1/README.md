@@ -38,6 +38,8 @@ NNI(Neural Network Intelligence)是微软亚洲研究院开源的自动机器学
 
 缺点：暂未发现
 
+更详细的对比：
+
 ![](https://www.msra.cn/wp-content/uploads/2019/12/nni-2.png)
 
 （摘自MSRA官网）
@@ -47,7 +49,7 @@ NNI(Neural Network Intelligence)是微软亚洲研究院开源的自动机器学
 NNI的安装非常简单，只需一行命令即可安装：
 
 ```
-$ python -m pip install --upgrade nni
+$ pip install --upgrade nni
 ```
 
 本人强烈推荐将nni安装在Anaconda的环境中，可通过在PyCharm中设置Python解释器，实现对NNI的调用。
@@ -57,6 +59,12 @@ $ python -m pip install --upgrade nni
 1. 通过nni模块获得参数
 2. 向nni报告中间结果
 3. 向nni报告最终结果
+
+修改好代码并且准备好搜索空间和配置文件后，就可以通过一行命令开始使用NNI：
+
+```
+$ nnictl create --config your-config.yml
+```
 
 具体会在下述代码部分进行解释。
 
@@ -125,7 +133,6 @@ nni.report_final_result(test_acc)
 ```
 
 
-
 #### 结果
 
 如图，10次trial都成功地完成，其中id为9的trial达到了最高准确率，达99.34%。
@@ -134,17 +141,29 @@ nni.report_final_result(test_acc)
 
 ![](Images/4.png)
 
-#### 超参
+#### 超参组合可视化
 
 ![](Images/5.png)
 
-#### 训练结果可视化
+图中，准确率更高的组合用红线表示，而准确率低的用绿线表示。
 
-![](./Images/2.png)
+可以看出，当batch_size选择16，lr和momentum大小适中时，模型可以达到99%以上的准确率，实验效果非常理想。
+
+#### 训练结果可视化
 
 ![](./Images/3.png)
 
+Default Metric
+
+![](./Images/2.png)
+
+Sorted Default Metric
+
 ![](./Images/6.png)
 
+Trial Duration
+
 ![](Images/7.png)
+
+Intermediate Results
 

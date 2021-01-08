@@ -64,7 +64,7 @@ class NeuralNet(nn.Module):
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
-        x = x.view(-1, 16 * 5 * 5)
+        x = x.view(-1, 16 * 5 * 5) # -1 means uncertain number
         x = F.relu(self.func1(x))
         x = F.relu(self.func2(x))
         x = self.func3(x)
@@ -83,11 +83,13 @@ def train(trainloader, path):
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
             inputs, labels = data
+            # training template for PyTorch
             optimizer.zero_grad()
             outputs = neuralnet(inputs)
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
+
             running_loss += loss.item()
 
             if i % 2000 == 1999:
