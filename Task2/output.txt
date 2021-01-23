@@ -1,0 +1,34 @@
+epoch 0 running...
+Testing Finished
+accuracy: 96.6400
+epoch 1 running...
+Testing Finished
+accuracy: 96.6400
+epoch 2 running...
+Testing Finished
+accuracy: 96.6400
+epoch 3 running...
+Testing Finished
+accuracy: 96.6400
+epoch 4 running...
+Testing Finished
+accuracy: 96.6400
+epoch 5 running...
+Testing Finished
+accuracy: 96.6400
+epoch 6 running...
+Testing Finished
+accuracy: 96.6600
+epoch 7 running...
+Testing Finished
+accuracy: 96.6600
+epoch 8 running...
+Testing Finished
+accuracy: 96.6600
+epoch 9 running...
+Testing Finished
+accuracy: 96.6600
+Training Finished
+Testing Finished
+accuracy: 96.6600
+best accuracy: 96.6600

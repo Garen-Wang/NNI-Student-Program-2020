@@ -70,11 +70,15 @@ def test(testloader, path, classes):
                 label = labels[i]
                 class_correct[label] += c[i].item()
                 class_total[label] += 1
-
+    correct = 0
+    total = 0
     for i in range(10):
-        print('Accuracy of %s: %.2f%%' % (classes[i], 100.0 * class_correct[i] / class_total[i]))
-
+        # print('Accuracy of %s: %.2f%%' % (classes[i], 100.0 * class_correct[i] / class_total[i]))
+        correct += class_correct[i]
+        total += class_total[i]
+    accuracy = 100.0 * correct / total
     print('Testing Finished')
+    return accuracy
 
 
 def showimg(img):
@@ -102,7 +106,7 @@ def main():
     path = './cifar_net.pth'
     # showImages(trainloader)
     train(trainloader, path)
-    test(testloader, path, classes)
+    accuracy = test(testloader, path, classes)
 
 
 if __name__ == '__main__':
