@@ -11,7 +11,6 @@ from nni.algorithms.nas.pytorch import darts
 from nni.nas.pytorch.callbacks import ArchitectureCheckpoint, LRSchedulerCallback
 from nni.nas.pytorch import mutables
 
-from mobilenet import *
 
 
 class NeuralNet(nn.Module):
@@ -36,7 +35,7 @@ class NeuralNet(nn.Module):
         self.func1 = nn.Linear(16 * 5 * 5, 120)
         self.func2 = nn.Linear(120, 84)
         self.func3 = nn.Linear(84, 10)
-        self.input_switch = mutables.InputChoice(n_candidates=2, n_chosen=1, key='skip')
+        self.input_switch = mutables.InputChoice(n_candidates=1, key='skip')
 
     def forward(self, x):
         # x = self.pool(F.relu(self.conv1(x)))
@@ -46,12 +45,12 @@ class NeuralNet(nn.Module):
         # x = F.relu(self.func2(x))
         # x = self.func3(x)
         x = self.pool(F.relu(self.conv1(x)))
-        old_x = x
-        zero_x = torch.zeros_like(old_x)
-        x = self.pool(F.relu(self.mid_conv(x)))
-        skip_x = self.input_switch([zero_x, old_x])
-        x = x + skip_x
-        x = self.pool(F.relu(self.conv2(x)))
+        x = self.mid_conv(x)
+        skip_x = self.input_switch([x])
+        x = self.conv2(x)
+        if skip_x is not None:
+            x = x + skip_x
+        x = self.pool(F.relu(x))
         x = x.view(-1, 16 * 5 * 5)
         x = F.relu(self.func1(x))
         x = F.relu(self.func2(x))

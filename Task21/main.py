@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 import torchvision
 import torchvision.transforms as transforms
@@ -8,8 +9,6 @@ from torch.utils.data import DataLoader, Dataset
 
 import nni
 from models import *
-import numpy as np
-import matplotlib.pyplot as plt
 
 transform_train = transforms.Compose([
     transforms.RandomCrop(32, padding=4),
@@ -22,8 +21,8 @@ transform_test = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
 ])
-trainset = torchvision.datasets.CIFAR10(root='./data', transform=transform_train)
-testset = torchvision.datasets.CIFAR10(root='./data', transform=transform_test)
+trainset = torchvision.datasets.CIFAR10(root='./data', transform=transform_train, train=True)
+testset = torchvision.datasets.CIFAR10(root='./data', transform=transform_test, train=False)
 trainloader = DataLoader(trainset, batch_size=128, shuffle=True, num_workers=2)
 testloader = DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
 
@@ -145,8 +144,6 @@ def showImages(trainloader):
 
 
 def main():
-    # transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
-    # showImages(trainloader)
     best_accuracy = 0.0
     args = nni.get_next_parameter()
     for t in range(2):

@@ -1,5 +1,5 @@
 authorName: default
-experimentName: example_with_cifar_classical_NAS
+experimentName: CIFAR10(classical-NAS)
 trialConcurrency: 1
 maxExecDuration: 100h
 maxTrialNum: 10
@@ -8,12 +8,19 @@ trainingServicePlatform: local
 #please use `nnictl ss_gen` to generate search space file first
 # searchSpacePath: <the_generated_search_space_path>
 searchSpacePath: nni_auto_gen_search_space.json
-useAnnotation: false
+useAnnotation: False
+
+# tuner:
+#   codeDir: .
+#   classFileName: random_nas_tuner.py
+#   className: RandomNASTuner
 tuner:
   builtinTunerName: PPOTuner
   classArgs:
     optimize_mode: maximize
+
+
 trial:
-  command: python classical.py
+  command: python test.py
   codeDir: .
   gpuNum: 0

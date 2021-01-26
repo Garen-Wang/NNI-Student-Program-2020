@@ -2,8 +2,8 @@
   "conv1": {
     "_type": "layer_choice",
     "_value": [
-      "0",
-      "1"
+      "conv3*3",
+      "conv5*5"
     ]
   },
   "mid_conv": {
