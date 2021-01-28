@@ -139,11 +139,11 @@ nni.report_final_result(test_acc)
 
 ![](./Images/1.png)
 
-![](Images/4.png)
+![](./images/4.png)
 
 #### 超参组合可视化
 
-![](Images/5.png)
+![](./images/5.png)
 
 图中，准确率更高的组合用红线表示，而准确率低的用绿线表示。
 
@@ -151,19 +151,19 @@ nni.report_final_result(test_acc)
 
 #### 训练结果可视化
 
-![](./Images/3.png)
+![](./images/3.png)
 
 Default Metric
 
-![](./Images/2.png)
+![](./images/2.png)
 
 Sorted Default Metric
 
-![](./Images/6.png)
+![](./images/6.png)
 
 Trial Duration
 
-![](Images/7.png)
+![](./images/7.png)
 
 Intermediate Results
 
