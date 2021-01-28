@@ -1,18 +1,123 @@
-# Task 3 进阶任务 Feature Engineering
+# Task 3 进阶任务
 
 ## 特征工程简介
 
-特征工程(Feature Engineering)是机器学习中的一个重要分支，指的是把原始数据转化成更好的特征的过程。
+有这么一句话在业界广泛流传：
 
-https://pandas.pydata.org/pandas-docs/stable/whatsnew/v0.20.0.html#whatsnew-0200-api-breaking-deprecate-group-agg-dict
+> 数据和特征决定了机器学习的上限，而模型和算法只是逼近这个上限而已。
 
-https://stackoverflow.com/questions/60229375/solution-for-specificationerror-nested-renamer-is-not-supported-while-agg-alo
+数据是特征的来源，特征是给定算法下模型精确度的最大决定因素，可见提升特征质量意义重大。
 
-https://github.com/SpongebBob/tabular_automl_NNI/pull/12
+特征工程(Feature Engineering)是机器学习的一个重要分支，指的是通过多种数据处理方法，从原始数据提取出若干个能优秀反映问题的特征，以提升最终算法与模型准确率的过程。
+
+利用NNI的自动特征工程实现，我们通过简单调用函数便可实现特征工程的自动调优。
+
+## 环境准备
+
+- nni
+- numpy
+- lightgbm： 微软开源算法
+- pandas： 数据分析强力工具
+- sklearn： 集成了很多特征工程相关函数
+- gensim
+
+建议在conda环境下部署自动特征工程python环境。
+
+此外，由于pandas版本更新，直接运行样例会报错，实际上只需修改`fe_util.py`中的`agg`参数类型即可，大致修改如下：
+
+```diff
+def aggregate(df, num_col, col, stat_list = AGGREGATE_TYPE):
+-   agg_dict = {}
++   agg_list = []
+    for i in stat_list:
+-       agg_dict[('AGG_{}_{}_{}'.format(i, num_col, col)] = i
++       agg_list.append(('AGG_{}_{}_{}'.format(i, num_col, col), i))
+-   agg_result = df.groupby([col])[num_col].agg(agg_dict)
++   agg.result = df.groupby([col])[num_col].agg(agg_list)
+    r = left_merge(df, agg_result, on = [col])
+    df = concat([df, r])
+    return df
+```
+
+该修改已提交pull request至原项目。
 
 ## 配置文件
 
+### 配置搜索空间
+
+NNI的自动特征工程支持count、crosscount、aggregate等一阶与二阶特征运算，配置搜索空间时只需按json格式填写搜索范围：
+
+```json
+{
+    "count":[
+        "C1","C2","C3","C4","C5","C6","C7","C8","C9","C10",
+        "C11","C12","C13","C14","C15","C16","C17","C18","C19",
+        "C20","C21","C22","C23","C24","C25","C26"
+    ],
+    "aggregate":[
+        ["I9","I10","I11","I12"],
+        [
+            "C1","C2","C3","C4","C5","C6","C7","C8","C9","C10",
+            "C11","C12","C13","C14","C15","C16","C17","C18","C19",
+            "C20","C21","C22","C23","C24","C25","C26"
+        ]
+    ],
+    "crosscount":[
+        [
+            "C1","C2","C3","C4","C5","C6","C7","C8","C9","C10",
+            "C11","C12","C13","C14","C15","C16","C17","C18","C19",
+            "C20","C21","C22","C23","C24","C25","C26"
+        ],
+        [
+            "C1","C2","C3","C4","C5","C6","C7","C8","C9","C10",
+            "C11","C12","C13","C14","C15","C16","C17","C18","C19",
+            "C20","C21","C22","C23","C24","C25","C26"
+        ]
+    ]
+}
+```
+
+### 导入tuner
+
+只需要在`config.yml`中的`tuner`项添加相关信息，其他地方正常填写即可。
+
+```yaml
+tuner:
+  codeDir: .
+  classFileName: autofe_tuner.py
+  className: AutoFETuner
+  classArgs:
+    optimize_mode: maximize
+```
+
 ## 代码
+
+Tuner在生成的搜索空间中随机选取一定数量的feature组合，通过`nni.get_next_parameter()`的接口，以dict的形式返回给单次trial。经一系列处理后运行lightGBM算法，得到最终以AUC形式呈现的结果。
+
+代码主体部分如下：
+
+```python
+# get parameter from tuner
+RECEIVED_PARAMS = nni.get_next_parameter()
+logger.info("Received params:\n", RECEIVED_PARAMS)
+
+# get sample column from parameter
+df = pd.read_csv(file_name)
+if 'sample_feature' in RECEIVED_PARAMS.keys():
+    sample_col = RECEIVED_PARAMS['sample_feature']
+else:
+    sample_col = []
+
+# df: raw feaure + sample_feature
+df = name2feature(df, sample_col, target_name)
+feature_imp, val_score = lgb_model_train(df, _epoch=1000, target_name=target_name,id_index=id_index)
+
+# report result to nni
+nni.report_final_result({
+    "default":val_score, 
+    "feature_importance":feature_imp
+})
+```
 
 ## 实现
 
