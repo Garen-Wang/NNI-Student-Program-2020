@@ -146,16 +146,16 @@ def main():
     path = './cifar_net2.pth'
     # showImages(trainloader)
     best_accuracy = 0.0
-    # args = nni.get_next_parameter()
-    args = {"lr": 0.00001, "model": "mobilenet", "optimizer": "Adamax"}
+    args = nni.get_next_parameter()
+    # args = {"lr": 0.00001, "model": "mobilenet", "optimizer": "Adamax"}
     for t in range(1):
         train(args)
         accuracy = test()
         if accuracy > best_accuracy:
             best_accuracy = accuracy
         print("accuracy: %.4f" % accuracy)
-        # nni.report_intermediate_result(accuracy)
-    # nni.report_final_result(best_accuracy)
+        nni.report_intermediate_result(accuracy)
+    nni.report_final_result(best_accuracy)
     print("best accuracy: %.4f" % best_accuracy)
 
 
