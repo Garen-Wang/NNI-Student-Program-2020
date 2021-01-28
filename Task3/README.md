@@ -48,7 +48,7 @@ def aggregate(df, num_col, col, stat_list = AGGREGATE_TYPE):
 
 ### 配置搜索空间
 
-NNI的自动特征工程支持count、crosscount、aggregate等一阶与二阶特征运算，配置搜索空间时只需按json格式填写搜索范围。具体填写方法以原项目为例：
+NNI的自动特征工程支持count、crosscount、aggregate等一阶与二阶特征运算，配置搜索空间时只需按json格式填写搜索范围。具体填写方法以项目示例搜索空间为例：
 
 ```json
 {
@@ -122,7 +122,7 @@ nni.report_final_result({
 })
 ```
 
-## 原项目示例运行结果
+## 项目示例运行结果
 
 ### overview
 
