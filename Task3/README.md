@@ -124,27 +124,23 @@ nni.report_final_result({
 
 ## 项目示例运行结果
 
-### overview
+### Overview
 
 ![](./images/task3_1.png)
 
-### Top 10 trials
+### Top 10 Trials
 
 ![](images/task3_2.png)
 
-### part of sample features
-
-![](images/task3_3.png)
-
-### default metric
+### Default Metric
 
 ![](images/task3_4.png)
 
-### hyper-parameter
+### Hyper-parameter
 
 ![](images/task3_6.png)
 
-### feature importance of top 1 trial
+### Feature Importance of Top 1 Trial
 
 ```
            feature_name  split  ...  split_percent  feature_score
@@ -171,23 +167,24 @@ heart数据集收集了中老年人是否患心脏病的270条数据，每条数
 
 初始AUC为0.932367，使用了NNI自动特征工程之后，AUC上升到了0.97343，比原始精确度高出许多。
 
-### overview
+### Overview
 
 ![](images/example1.png)
 
-### top 10 trials
+### Top 10 Trials
 
 ![](images/example2.png)
 
-### default metric
+### Default 
+Sorted Default MetricMetric
 
 ![](images/example3.png)
 
-### hyper-parameter
+### Hyper-parameter
 
 ![](images/example4.png)
 
-### feature importance of top 1 trial
+### Feature Importance of Top 1 Trial
 
 ```
                      feature_name  split  ...  split_percent  feature_score

@@ -34,9 +34,9 @@ Google Cloud AutoML基于高精度的深度神经网络而设计，可用于图�
 
 NNI(Neural Network Intelligence)是微软亚洲研究院开源的自动机器学习工具，面向研究人员和算法工程师而设计，2018年9月问世，目前已经更新至v1.9。
 
-优点：具有多平台支持，可命令行操作，支持结果可视化。内置优化算法多，扩展性强，支持远程调用进行集群训练。
+优点：支持多平台，支持命令行操作，支持结果可视化。内置优化算法多，扩展性强，支持远程调用进行集群训练。
 
-缺点：暂未发现
+缺点：个人认为调试方面可以进一步改善。
 
 更详细的对比：
 
@@ -153,17 +153,8 @@ nni.report_final_result(test_acc)
 
 ![](./images/3.png)
 
-Default Metric
-
 ![](./images/2.png)
-
-Sorted Default Metric
 
 ![](./images/6.png)
 
-Trial Duration
-
 ![](./images/7.png)
-
-Intermediate Results
-
