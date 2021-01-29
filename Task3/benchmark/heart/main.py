@@ -34,6 +34,7 @@ if __name__ == '__main__':
     file_name = '~/Downloads/heart.dat'
     target_name = 'Label'
     id_index = 'Id'
+    min_data = 10
 
     # get parameters from tuner
     RECEIVED_PARAMS = nni.get_next_parameter()
@@ -46,17 +47,18 @@ if __name__ == '__main__':
         "n9", "n10", "n11", "n12", "n13", 'Label'
     ]
     df['Label'] = df['Label'] -1 #LabelEncoder().fit_transform(df['Label'])
+    print(df)
     
     if 'sample_feature' in RECEIVED_PARAMS.keys():
         sample_col = RECEIVED_PARAMS['sample_feature']
     else:
         sample_col = []
-    
+
     # raw feaure + sample_feature
     df = name2feature(df, sample_col, target_name)
-    feature_imp, val_score = lgb_model_train(df,  _epoch = 1000, target_name = target_name, id_index = id_index)
+    feature_imp, val_score = lgb_model_train(df,  _epoch = 1000, target_name = target_name, id_index = id_index, min_data = min_data)
     nni.report_final_result({
-        "default":val_score, 
+        "default":val_score,
         "feature_importance":feature_imp
     })
 

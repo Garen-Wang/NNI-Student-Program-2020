@@ -136,11 +136,11 @@ nni.report_final_result({
 
 ![](images/task3_3.png)
 
-### plot
+### default metric
 
 ![](images/task3_4.png)
 
-### hyper parameter
+### hyper-parameter
 
 ![](images/task3_6.png)
 
@@ -161,9 +161,48 @@ nni.report_final_result({
 112        count_C26_C7      0  ...       0.000000       0.000000
 ```
 
-## 使用NNI跑一跑heart数据集
+## heart数据集运行结果
 
 [数据集地址](http://archive.ics.uci.edu/ml/datasets/Statlog+%28Heart%29)
 
-## 结果
+heart数据集收集了中老年人是否患心脏病的270条数据，每条数据有13条属性，本质上是一个二分类问题的数据。
 
+我们希望通过特征工程，从数据中挖掘出心脏病患病与其他事件的相关性，从庞杂的数据中得出结论。
+
+初始AUC为0.932367，使用了NNI自动特征工程之后，AUC上升到了0.97343，比原始精确度高出许多。
+
+### overview
+
+![](images/example1.png)
+
+### top 10 trials
+
+![](images/example2.png)
+
+### default metric
+
+![](images/example3.png)
+
+### hyper-parameter
+
+![](images/example4.png)
+
+### feature importance of top 1 trial
+
+```
+                     feature_name  split  ...  split_percent  feature_score
+113          count_chest-pain_sex      4  ...       9.302326       0.197441
+37      AGG_var_chest-pain_hr-max      5  ...      11.627907       0.083669
+53         AGG_median_age_vessels      3  ...       6.976744       0.075381
+0                             age      3  ...       6.976744       0.058558
+12                           thal      2  ...       4.651163       0.056385
+..                            ...    ...  ...            ...            ...
+54            AGG_max_sex_vessels      0  ...       0.000000       0.000000
+52   AGG_median_chest-pain_hr-max      0  ...       0.000000       0.000000
+51     AGG_median_bs-fasting_thal      0  ...       0.000000       0.000000
+50       AGG_mean_age_cholesterol      0  ...       0.000000       0.000000
+138            AGG_var_sex_hr-max      0  ...       0.000000       0.000000
+
+[139 rows x 6 columns]
+
+```
