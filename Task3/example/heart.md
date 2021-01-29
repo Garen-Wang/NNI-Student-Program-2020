@@ -1,7 +1,7 @@
 # Attribute Information of heart.csv
 
-1. age: rounded age
-2. sex: values 0, 1
+1. age
+2. sex
 3. chest_pain: chest pain type(4 values)
 4. bp_resting: resting blood pressure
 5. cholesterol: serum cholesterol in mg/dl

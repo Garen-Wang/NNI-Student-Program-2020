@@ -34,7 +34,6 @@ if __name__ == '__main__':
     file_name = '~/Downloads/heart.dat'
     target_name = 'Label'
     id_index = 'Id'
-    min_data = 10
 
     # get parameters from tuner
     RECEIVED_PARAMS = nni.get_next_parameter()
