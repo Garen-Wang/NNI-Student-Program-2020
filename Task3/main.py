@@ -20,34 +20,23 @@ import logging
 import numpy as np
 import pandas as pd
 import json
-import sys
-from sklearn.preprocessing import LabelEncoder
-
-sys.path.append('../../')
-
 from fe_util import *
 from model import *
 
 logger = logging.getLogger('auto-fe-examples')
 
 if __name__ == '__main__':
-    file_name = '~/Downloads/heart.dat'
+    file_name = 'train.tiny.csv'
     target_name = 'Label'
     id_index = 'Id'
-    min_data = 10
+    min_data = 200  # must be a factor of number of instances
 
     # get parameters from tuner
     RECEIVED_PARAMS = nni.get_next_parameter()
     logger.info("Received params:\n", RECEIVED_PARAMS)
     
     # list is a column_name generate from tuner
-    df = pd.read_csv(file_name, sep = ' ')
-    df.columns = [
-        'c1', 'c2', 'c3', 'n4', 'n5', 'n6', 'c7', 'n8',\
-        "n9", "n10", "n11", "n12", "n13", 'Label'
-    ]
-    df['Label'] = df['Label'] -1 #LabelEncoder().fit_transform(df['Label'])
-    
+    df = pd.read_csv(file_name)
     if 'sample_feature' in RECEIVED_PARAMS.keys():
         sample_col = RECEIVED_PARAMS['sample_feature']
     else:
@@ -55,9 +44,9 @@ if __name__ == '__main__':
     
     # raw feaure + sample_feature
     df = name2feature(df, sample_col, target_name)
-    feature_imp, val_score = lgb_model_train(df,  _epoch = 1000, target_name = target_name, id_index = id_index)
+    feature_imp, val_score = lgb_model_train(df, _epoch=1000, target_name=target_name,
+                                             id_index=id_index, min_data=min_data)
     nni.report_final_result({
         "default":val_score, 
         "feature_importance":feature_imp
     })
-

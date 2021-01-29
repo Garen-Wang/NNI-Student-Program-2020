@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     params = nni.get_next_parameter()
     
-    df = pd.read_csv(file_name, sep = ' ')
+    df = pd.read_csv(file_name, sep=' ')
     df.columns = [
         "age", "sex", "chest-pain", "bp-resting", "cholesterol", "bs-fasting", "ecg-resting", "hr-max", "eia", "oldpeak", "k-oldpeak", "vessels", "thal", "label"
     ]

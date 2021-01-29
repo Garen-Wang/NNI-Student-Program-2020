@@ -9,7 +9,7 @@ searchSpacePath: search_space.json
 #choice: true, false
 useAnnotation: false
 tuner:
-  codeDir: ../../
+  codeDir: .
   classFileName: autofe_tuner.py
   className: AutoFETuner
   classArgs:
