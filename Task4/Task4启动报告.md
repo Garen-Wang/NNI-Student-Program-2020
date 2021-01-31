@@ -32,7 +32,7 @@
 
 ## 项目目标
 
-通过使用NNI，对回归算法内置模型进行调优，使得模型提取出更加有context-aware性质的features，进一步降低mean absolute error(MAE)，提高计数的准确度。
+通过使用NNI，对回归算法内置模型进行调优，使得模型提取出更加有context-aware性质的features，进一步降低平均绝对误差(MAE)，提高计数的准确率。
 
 ## 项目规划
 
