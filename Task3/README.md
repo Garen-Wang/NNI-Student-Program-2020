@@ -42,7 +42,7 @@ def aggregate(df, num_col, col, stat_list = AGGREGATE_TYPE):
     return df
 ```
 
-该修改已提交pull request至原项目。
+该修改已提交[pull request](https://github.com/SpongebBob/tabular_automl_NNI/pull/12)至原项目。
 
 ## 配置文件
 
@@ -165,7 +165,11 @@ heart数据集收集了中老年人是否患心脏病的270条数据，每条数
 
 我们希望通过特征工程，从数据中挖掘出心脏病患病与其他事件的相关性，从庞杂的数据中得出结论。
 
-初始AUC为0.932367，使用了NNI自动特征工程之后，AUC上升到了0.97343，比原始精确度高出许多。
+在使用过程中，需要修改LightGBM算法的`min_data`参数为数据个数的因数，相应修改可在[原项目pull request](https://github.com/SpongebBob/tabular_automl_NNI/pull/12)中查看。
+
+搜索空间根据本人的理解进行了小调整，因此会与原项目数据不同。
+
+在本人的机器上，初始AUC为0.932367，使用了NNI自动特征工程之后，AUC上升到了0.97343，比原始精确度高出许多，也提高了原项目中0.9501的上限。
 
 ### Overview
 
