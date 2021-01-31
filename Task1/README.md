@@ -14,7 +14,7 @@
 
 #### auto-sklearn
 
-auto-sklearn是GitHub上开源的一个基于sklearn的自动机器学习工具，目前已获得5.1k个星。
+[auto-sklearn](https://github.com/automl/auto-sklearn)是GitHub上开源的一个基于sklearn的自动机器学习工具，目前已获得5.2k个星。
 
 优点：可限制训练时间，支持切分训练集和测试集，支持交叉验证。
 
@@ -22,9 +22,7 @@ auto-sklearn是GitHub上开源的一个基于sklearn的自动机器学习工具�
 
 #### Google Cloud AutoML
 
-Google Cloud AutoML基于高精度的深度神经网络而设计，可用于图像分类、自然语言处理、语音翻译等。
-
-优点：具有较完整的谷歌ML生态链，Tensorflow+Colab+Cloud AutoML共同使用时非常方便。
+[Google Cloud AutoML](https://cloud.google.com/automl/)基于高精度的深度神经网络而设计，可用于图像分类、自然语言处理、语音翻译等。
 
 优点：具有完整图形界面，对新手用户友好，同时提供API调用，分类详尽。
 
@@ -32,9 +30,9 @@ Google Cloud AutoML基于高精度的深度神经网络而设计，可用于图�
 
 #### Microsoft NNI
 
-NNI(Neural Network Intelligence)是微软亚洲研究院开源的自动机器学习工具，面向研究人员和算法工程师而设计，2018年9月问世，目前已经更新至v1.9。
+[NNI(Neural Network Intelligence)](https://github.com/microsoft/nni)是微软开源的自动机器学习工具，面向研究人员和算法工程师而设计，2018年9月问世，目前已经更新至v2.0。
 
-优点：支持多平台，支持命令行操作，支持结果可视化。内置优化算法多，扩展性强，支持远程调用进行集群训练。
+优点：支持多平台，支持命令行操作，支持结果可视化。内置优化算法多，功能丰富，扩展性强，支持远程调用进行集群训练。
 
 缺点：个人认为调试方面可以进一步改善。
 
@@ -52,7 +50,7 @@ NNI的安装非常简单，只需一行命令即可安装：
 $ pip install --upgrade nni
 ```
 
-本人强烈推荐将nni安装在Anaconda的环境中，可通过在PyCharm中设置Python解释器，实现对NNI的调用。
+本人强烈推荐将nni安装在conda环境中，可通过在PyCharm中设置Python解释器，实现对NNI的调用。
 
 使用NNI，需要在原有神经网络代码的基础上做出些许修改：
 
@@ -63,21 +61,20 @@ $ pip install --upgrade nni
 修改好代码并且准备好搜索空间和配置文件后，就可以通过一行命令开始使用NNI：
 
 ```
-$ nnictl create --config your-config.yml
+$ nnictl create --config config.yml
 ```
 
 具体会在下述代码部分进行解释。
-
 
 ### 3. NNI 使用感受
 
 NNI易于安装，易于使用，有一套完善的命令行控制工具，也有结果可视化界面，对机器学习实验与研究提供了巨大的便利。
 
-本人大一，尚未接触过多机器学习知识，但通过在本地跑通多个样例后，能感受到NNI在机器学习方面的威力，希望未来能够掌握NNI，方便未来的研究与学习。
+本人为大一学生，尚未接触过多机器学习知识，但通过在本地跑通多个样例后，能感受到NNI在机器学习方面的威力，希望未来能够掌握NNI，方便未来的研究与学习。
 
 ## NNI 样例分析文档
 
-### 配置文件：config_windows.yml
+### 配置文件：config.yml
 
 ```
 authorName: default
@@ -121,17 +118,19 @@ trial:
 ```python
 tuner_params = nni.get_next_parameter()
 ```
+获得的参数是一个dict对象，通过搜索空间定义的名称可索引出对应的参数值。
 
-2. 在每个epoch学习完成后，报告中间结果：
+1. 训练中途，报告中间结果：
 ```python
 nni.report_intermediate_result(test_acc)
 ```
+可在间隔若干个epoch后报告中间结果，也可在间隔若干时间后报告中间结果。
 
 3. 在训练完整结束后，报告最终结果：
 ```python
 nni.report_final_result(test_acc)
 ```
-
+报告的最终结果作为训练的default metric，用于不同trial之间的比较。
 
 #### 结果
 
