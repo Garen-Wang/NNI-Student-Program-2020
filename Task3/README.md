@@ -143,19 +143,23 @@ nni.report_final_result({
 ### Feature Importance of Top 1 Trial
 
 ```
-           feature_name  split  ...  split_percent  feature_score
-5                    I6     43  ...       7.570423       0.108238
-4                    I5     18  ...       3.169014       0.037422
-29                  C17     17  ...       2.992958       0.037006
-161  AGG_median_I11_C15     17  ...       2.992958       0.036113
-48        count_C18_C23     18  ...       3.169014       0.030764
-..                  ...    ...  ...            ...            ...
-77      AGG_min_I11_C17      0  ...       0.000000       0.000000
-76      AGG_min_I12_C20      0  ...       0.000000       0.000000
-127       count_C19_C23      0  ...       0.000000       0.000000
-128       count_C17_C22      0  ...       0.000000       0.000000
-112        count_C26_C7      0  ...       0.000000       0.000000
+         feature_name  split  ...  split_percent  feature_score
+5                  I6     39  ...      11.504425       0.145729
+4                  I5     20  ...       5.899705       0.067777
+85     AGG_max_I9_C17     14  ...       4.129794       0.053053
+76      count_C18_C23     11  ...       3.244838       0.031225
+43   AGG_mean_I11_C16      9  ...       2.654867       0.029425
+..                ...    ...  ...            ...            ...
+86    AGG_var_I11_C25      0  ...       0.000000       0.000000
+82      count_C12_C20      0  ...       0.000000       0.000000
+80       count_C1_C17      0  ...       0.000000       0.000000
+77       count_C1_C23      0  ...       0.000000       0.000000
+100     count_C15_C21      0  ...       0.000000       0.000000
+
+[162 rows x 6 columns]
 ```
+
+若想要查询某一次trial的feature importance，只需在WebUI中按下Copy as json，再代入原程序运行就可以获得了。
 
 ## heart数据集运行结果
 
@@ -179,8 +183,7 @@ heart数据集收集了中老年人是否患心脏病的270条数据，每条数
 
 ![](images/example2.png)
 
-### Default 
-Sorted Default MetricMetric
+### Default Metric
 
 ![](images/example3.png)
 
