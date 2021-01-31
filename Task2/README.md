@@ -21,34 +21,15 @@ CIFAR10数据集共有60000张分辨率为32*32的彩色图像，分为十类，
 3. 训练神经网络
 4. 测试神经网络
 
-代码中的神经网络有两个卷积层：
-
-1. 第一层，3个输入（RGB），6个输出。
-2. 第二层，6个输入，16个输出。
-
-池化层通过`torch.nn.MaxPool2d`来创建。
-
-然后定义三个全连接函数：
-1. 第一个，将16\*5\*5个节点连接至120个节点。
-2. 第二个，将120个节点连接到84个节点。
-3. 第三个，将84个节点连接到10个节点，即对应分类。
-
-激活函数全程使用Relu函数。
-
-误差函数使用交叉熵函数，优化方法使用SGD。
-
-
-
 ### 实验配置
 
-使用Anaconda环境下的Python3.8，使用PyCharm运行程序。
-
-设置程序不使用GPU，只用CPU完成训练。
+使用conda环境下的Python3.8，使用PyTorch框架运行程序。使用CPU进行训练。
 
 ### 代码分析
 
-我们利用了`torch.nn`模块定义了本任务的神经网络。
+#### 神经网络的定义
 
+我们利用了`torch.nn`模块定义了本任务的神经网络`NeuralNet`。
 
 ```python
 class NeuralNet(nn.Module):
@@ -69,8 +50,25 @@ class NeuralNet(nn.Module):
         x = F.relu(self.func2(x))
         x = self.func3(x)
         return x
-
 ```
+
+该模型与最经典的卷积神经网络LeNet非常相像，唯二的区别是输入的单通道变成了RGB三通道，激活函数换成了很常见的ReLU。
+
+在[神经网络简明教程第8步/18.0-经典卷积神经网络模型](https://github.com/microsoft/ai-edu/blob/master/A-基础教程/A2-神经网络基本原理/第8步%20-%20卷积神经网络/18.0-经典卷积神经网络模型.md#1801-lenet-1998)中，有对LeNet和其他模型的简明介绍，可供了解。
+
+我们详细分析`forward`函数中的运算，以及`x`的变化：
+
+CIFAR10数据集中大小固定为32x32，假设`batch_size`为4，那么最开始的`x`在3维空间上，shape为(4, 32, 32)。
+
+经过`self.conv1`后，`x`升到6维空间，shape变为(4, 28, 28)，再经过2x2的池化后，shape变为(4, 14, 14)。
+
+经过`self.conv2`后，`x`升到16维空间，shape变为(4, 10, 10)，再经过2x2的池化后，shape变为(4, 5, 5)。
+
+之后的`x = x.view(-1, 16 * 5 * 5)`，将同一数据的特征reshape到同一列，-1所代表的就是`batch_size`。
+
+接下来三个全连接层，将$16 \times 5 \times 5 = 400$个feature逐步映射到10个类别，最终实现了10分类。
+
+#### 神经网络的训练
 
 而训练过程中，使用PyTorch的写法是这样的：
 
@@ -79,6 +77,7 @@ def train(trainloader, path):
     neuralnet = NeuralNet()
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(neuralnet.parameters(), lr=0.001, momentum=0.9)
+    neuralnet.train()
     for epoch in range(10):
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
@@ -100,12 +99,41 @@ def train(trainloader, path):
     print('Training Finished')
 ```
 
+#### 神经网络的测试
+
+```python
+def test(testloader, path, classes):
+    neuralnet = NeuralNet()
+    neuralnet.load_state_dict(torch.load(path))
+    class_correct = list(0.0 for i in range(10))
+    class_total = list(0.0 for i in range(10))
+    neuralnet.eval()
+    with torch.no_grad():
+        for data in testloader:
+            images, labels = data
+            outputs = neuralnet(images)
+            _, predicated = torch.max(outputs, 1)
+            c = (predicated == labels).squeeze()
+            for i in range(4):
+                label = labels[i]
+                class_correct[label] += c[i].item()
+                class_total[label] += 1
+    correct = 0
+    total = 0
+    for i in range(10):
+        # print('Accuracy of %s: %.2f%%' % (classes[i], 100.0 * class_correct[i] / class_total[i]))
+        correct += class_correct[i]
+        total += class_total[i]
+    accuracy = 100.0 * correct / total
+    print('Testing Finished')
+    return accuracy
+```
+
 ### 结果分析
 
 经10个epoch的训练，最终输出结果如下：
 
 ```
-C:\Users\12058\anaconda3\python.exe C:/Users/12058/Documents/GitHub/nni-learning/task2/2.1/main.py
 [    1,  2000] loss = 2.16590
 [    1,  4000] loss = 1.82480
 [    1,  6000] loss = 1.64638
@@ -178,9 +206,6 @@ Accuracy of horse: 73.24%
 Accuracy of ship: 86.18%
 Accuracy of truck: 66.52%
 Testing Finished
-
-Process finished with exit code 0
-
 ```
 可以看出，损失值总体稳定下降，对车、飞机、船等图像分类准确率较高，而对猫、狗、卡车等图像的准确率较不理想。
 
