@@ -1,5 +1,6 @@
 {
-	"lr": {"_type": "choice", "_value": [0.01, 0.001]},
+	"batch_size": {"_type": "choice", "_value": [100, 128, 200, 256]},
+	"lr": {"_type": "choice", "_value": [0.1, 0.01, 0.001]},
 	"optimizer": {"_type": "choice", "_value": ["SGD", "Adadelta", "Adagrad", "Adam", "Adamax"]},
-	"model": {"_type": "choice", "_value": ["cnn", "vgg", "resnet18", "googlenet", "densenet121", "mobilenet", "dpn92", "senet18"]}
+	"model": {"_type": "choice", "_value": ["vgg"]}
 }

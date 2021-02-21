@@ -21,6 +21,6 @@ assessor:
     threshold: 0.9
 
 trial:
-  command: python main.py
+  command: python3 main.py
   codeDir: .
-  gpuNum: 0
+  gpuNum: 1
