@@ -49,7 +49,8 @@ if __name__ == "__main__":
                                batch_size=args.batch_size,
                                log_frequency=args.log_frequency,
                                unrolled=args.unrolled,
-                               callbacks=[LRSchedulerCallback(lr_scheduler), ArchitectureCheckpoint("./checkpoints")])
+                               callbacks=[LRSchedulerCallback(lr_scheduler), ArchitectureCheckpoint("./checkpoints")],
+                               workers=2)
         if args.visualization:
             trainer.enable_visualization()
 
@@ -65,7 +66,8 @@ if __name__ == "__main__":
             dataset=dataset_train,
             batch_size=args.batch_size,
             log_frequency=args.log_frequency,
-            unrolled=args.unrolled
+            unrolled=args.unrolled,
+            workers=2
         )
         trainer.fit()
         final_architecture = trainer.export()
