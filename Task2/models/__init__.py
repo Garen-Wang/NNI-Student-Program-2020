@@ -7,4 +7,4 @@ from .pnasnet import *
 from .resnet import *
 from .senet import *
 from .shufflenet import *
-
+from .mobilenet import *

@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset
 
-import nni
+# import nni
 # from models import *
 from vgg import *
 
@@ -47,8 +47,8 @@ def train(args):
         optimizer = optim.Adamax(model.parameters(), lr=args['lr'])
     else:
         optimizer = optim.SGD(model.parameters(), lr=args['lr'], momentum=0.9, weight_decay=5e-4)
-    model.train()
-    for epoch in range(40):
+    for epoch in range(200):
+        model.train()
         print('epoch %d running...' % epoch)
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
@@ -64,8 +64,11 @@ def train(args):
             if i % 2560 == 2559:
                 print('[%5d, %5d] loss = %.5f' % (epoch + 1, i + 1, running_loss / 2560))
                 running_loss = 0.0
-
-    torch.save(model.state_dict(), './cifar_net({},{},{}).pth'.format(args['lr'], args['optimizer'], args['model']))
+        if (epoch + 1) % 10 == 0:
+            # torch.save(model.state_dict(), './cifar_net({},{},{}).pth'.format(args['lr'], args['optimizer'], args['model']))
+            torch.save(model.state_dict(), 'cifar_net.pth')
+            accuracy = test()
+            print('accuracy: %.4f' % accuracy)
     print('Training Finished')
 
 
@@ -99,15 +102,20 @@ def test():
 
 def main():
     best_accuracy = 0.0
-    args = nni.get_next_parameter()
+    # args = nni.get_next_parameter()
+    args = {
+        "batch_size": 100,
+        "lr": 0.01,
+        "optimizer": "Adamax",
+        "model": "vgg"
+    }
     for t in range(1):
         train(args)
         accuracy = test()
         if accuracy > best_accuracy:
             best_accuracy = accuracy
-        print("accuracy: %.4f" % accuracy)
-        nni.report_intermediate_result(accuracy)
-    nni.report_final_result(best_accuracy)
+        # nni.report_intermediate_result(accuracy)
+    # nni.report_final_result(best_accuracy)
 
 
 if __name__ == '__main__':

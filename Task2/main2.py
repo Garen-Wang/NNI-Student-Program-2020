@@ -98,7 +98,7 @@ def train(args):
         accuracy = test()
         print("accuracy: %.4f" % accuracy)
 
-    torch.save(model.state_dict(), './cifar_net44444.pth')
+    torch.save(model.state_dict(), './cifar_net(test_which).pth')
     print('Training Finished')
 
 
