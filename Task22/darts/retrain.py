@@ -151,7 +151,10 @@ if __name__ == "__main__":
         # validation
         cur_step = (epoch + 1) * len(train_loader)
         top1 = validate(args, valid_loader, model, criterion, epoch, cur_step)
-        best_top1 = max(best_top1, top1)
+        if top1 > best_top1:
+            best_top1 = top1
+            torch.save(model.state_dict(), 'best_architecture.pth')
+        # best_top1 = max(best_top1, top1)
 
         lr_scheduler.step()
 
