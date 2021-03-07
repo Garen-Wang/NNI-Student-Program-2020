@@ -21,6 +21,7 @@ def getArguments():
     parser.add_argument('--batch_size', default=100, type=int)
     parser.add_argument('--channels', default=16, type=int)
     parser.add_argument('--layers', default=8, type=int)
+    parser.add_argument('--log_frequency', default=100, type=int)
     parser.add_argument('--unrolled', default=False, action='store_true')
     parser.add_argument('--visualization', default=False, action='store_true')
     args = parser.parse_args()
@@ -47,6 +48,7 @@ if __name__ == '__main__':
         trainset,
         testset,
         batch_size=args.batch_size,
+        log_frequency=args.log_frequency,
         unrolled=args.unrolled,
         callbacks=[LRSchedulerCallback(lr_scheduler), ArchitectureCheckpoint('./checkpoints')]
     )
