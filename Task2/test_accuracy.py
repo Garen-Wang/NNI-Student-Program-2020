@@ -114,7 +114,7 @@ def test():
             outputs = model(images)
             _, predicated = torch.max(outputs, 1)
             c = (predicated == labels).squeeze()
-            for i in range(10):
+            for i in range(100):
                 label = labels[i]
                 class_correct[label] += c[i].item()
                 class_total[label] += 1
@@ -144,7 +144,7 @@ def showImages(trainloader):
 
 def main():
     # transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
-    path = './cifar_net2.pth'
+    path = './cifar_net444.pth'
     # showImages(trainloader)
     best_accuracy = 0.0
     # args = nni.get_next_parameter()
