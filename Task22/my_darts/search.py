@@ -21,6 +21,8 @@ def getArguments():
     parser.add_argument('--batch_size', default=100, type=int)
     parser.add_argument('--channels', default=16, type=int)
     parser.add_argument('--layers', default=8, type=int)
+    parser.add_argument('--unrolled', default=False, action='store_true')
+    parser.add_argument('--visualization', default=False, action='store_true')
     args = parser.parse_args()
     return args
 
