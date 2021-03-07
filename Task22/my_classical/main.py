@@ -1,4 +1,6 @@
 import nni
+from nni.nas.pytorch.mutables import LayerChoice, InputChoice
+from nni.algorithms.nas.pytorch.classic_nas import get_and_apply_next_architecture
 import argparse
 import torch
 import torch.nn as nn
@@ -7,21 +9,22 @@ import torch.nn.functional as F
 from torchvision import transforms, datasets
 from torch.utils.data import DataLoader
 
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
 
 def getArguments():
     parser = argparse.ArgumentParser('classicalNAS')
     parser.add_argument('--epochs', default=100, type=int)
+    parser.add_argument('--batch_size', default=100, type=int)
     args = parser.parse_args()
     return args
 
 
-args = getArguments()
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
-
 class Block(nn.Module):
-    def __init__(self, in_channels, out_channels, stride=1):
+    def __init__(self, in_channels, out_channels, stride):
         super(Block, self).__init__()
+        self.in_channels = in_channels
+        self.out_channels = out_channels
         self.conv1 = nn.Conv2d(in_channels, in_channels, 3, stride, 1, bias=False, groups=in_channels)
         self.bn1 = nn.BatchNorm2d(in_channels)
         self.conv2 = nn.Conv2d(in_channels, out_channels, 1, 1, 0, bias=False)
@@ -41,7 +44,7 @@ def _make_mobilenet_layers(in_channels):
         stride = 1 if isinstance(x, int) else x[1]
         layers.append(Block(in_channels, out_channels, stride))
         in_channels = out_channels
-    return nn.Sequential(*layers)
+    return layers
 
 
 class MobileNet(nn.Module):
@@ -52,10 +55,27 @@ class MobileNet(nn.Module):
         self.layers = _make_mobilenet_layers(32)
         self.pool = nn.AvgPool2d(2)
         self.linear = nn.Linear(1024, 10)
+        self.skipconnect1 = InputChoice(n_candidates=2, n_chosen=1, key='skip1')
+        self.skipconnect2 = InputChoice(n_candidates=2, n_chosen=1, key='skip2')
+        self.skipconnect3 = InputChoice(n_candidates=2, n_chosen=1, key='skip3')
+        self.skipconnect4 = InputChoice(n_candidates=2, n_chosen=1, key='skip4')
+        self.skipconnect5 = InputChoice(n_candidates=2, n_chosen=1, key='skip5')
+        self.skipconnect6 = InputChoice(n_candidates=2, n_chosen=1, key='skip6')
+        self.skipconnect7 = InputChoice(n_candidates=2, n_chosen=1, key='skip7')
+        self.skipconnect8 = InputChoice(n_candidates=2, n_chosen=1, key='skip8')
 
     def forward(self, x):
         x = F.relu(self.bn1(self.conv1(x)))
-        x = self.layers(x)
+        i = 1
+        for block in self.layers:
+            old_x = x
+            x = block(x)
+            if block.in_channels == block.out_channels:
+                zero_x = torch.zeros_like(old_x)
+                skipconnect = eval('self.skipconnect{}'.format(i))
+                skip_x = skipconnect([zero_x, old_x])
+                x = torch.add(x, skip_x)
+                i += 1
         x = self.pool(x)
         x = x.view(x.size(0), -1)
         x = self.linear(x)
@@ -75,14 +95,13 @@ transform_test = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
 ])
-trainset = datasets.CIFAR10(root='../data', transform=transform_train, train=True)
-testset = datasets.CIFAR10(root='../data', transform=transform_test, train=False)
+trainset = datasets.CIFAR10(root='../data', transform=transform_train, train=True, download=True)
+testset = datasets.CIFAR10(root='../data', transform=transform_test, train=False, download=True)
 trainloader = DataLoader(trainset, batch_size=100, shuffle=True, num_workers=2)
 testloader = DataLoader(testset, batch_size=100, shuffle=False, num_workers=2)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), 0.025, momentum=0.9, weight_decay=3.0E-4)
-# lr_scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, args['epochs'], eta_min=0.001)
 
 
 def train(epoch_id):
@@ -126,9 +145,20 @@ def test():
             correct += class_correct[i]
             total += class_total[i]
         accuracy = 100.0 * correct / total
-        print('accuracy: %.4f%%' % (accuracy))
+        print('accuracy: %.4f%%' % accuracy)
+        return accuracy
+
 
 if __name__ == '__main__':
+    args = getArguments()
+    best_accuracy = 0.0
+    get_and_apply_next_architecture(model)
     for epoch in range(args.epochs):
         train(epoch)
-        test()
+        accuracy = test()
+        if accuracy > best_accuracy:
+            best_accuracy = accuracy
+        if (epoch + 1) % 10 == 0:
+            nni.report_intermediate_result(accuracy)
+    nni.report_final_result(best_accuracy)
+
