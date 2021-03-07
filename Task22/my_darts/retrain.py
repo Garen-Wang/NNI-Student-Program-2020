@@ -124,7 +124,8 @@ if __name__ == "__main__":
     model.to(device)
     criterion.to(device)
 
-    optimizer = torch.optim.SGD(model.parameters(), 0.025, momentum=0.9, weight_decay=3.0E-4)
+    # optimizer = torch.optim.SGD(model.parameters(), 0.025, momentum=0.9, weight_decay=3.0E-4)
+    optimizer = torch.optim.Adamax(model.parameters(), 0.025)
     lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.epochs, eta_min=1E-6)
 
     train_loader = DataLoader(dataset_train,

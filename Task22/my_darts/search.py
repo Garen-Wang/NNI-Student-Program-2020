@@ -36,7 +36,8 @@ trainset, testset = getDatasets()
 
 if __name__ == '__main__':
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), 0.025, momentum=0.9, weight_decay=3.0E-4)
+    # optimizer = optim.SGD(model.parameters(), 0.025, momentum=0.9, weight_decay=3.0E-4)
+    optimizer = optim.Adamax(model.parameters(), lr=0.025)
     lr_scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, args.epochs, eta_min=0.001)
 
     trainer = DartsTrainer(
