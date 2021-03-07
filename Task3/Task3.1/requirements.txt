@@ -1,0 +1,6 @@
+lightgbm
+pandas
+numpy
+sklearn
+nni
+gensim
