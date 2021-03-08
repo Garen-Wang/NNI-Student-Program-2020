@@ -37,7 +37,7 @@ class Block(nn.Module):
 
 
 def _make_mobilenet_layers(in_channels):
-    cfg = [64, (128, 2), 128, (256, 2), 256, (512, 2), 512, 512, 512, 512, 512, (1024, 2), 1024]
+    cfg = [64, (128, 2), 128, 128, (256, 2), 256, 256, (512, 2), 512, 512, 512, 512, 512, 512, (1024, 2), 1024, 1024]
     layers = nn.ModuleList()
     for x in cfg:
         out_channels = x if isinstance(x, int) else x[0]
@@ -61,21 +61,25 @@ class MobileNet(nn.Module):
         self.skipconnect4 = InputChoice(n_candidates=2, n_chosen=1, key='skip4')
         self.skipconnect5 = InputChoice(n_candidates=2, n_chosen=1, key='skip5')
         self.skipconnect6 = InputChoice(n_candidates=2, n_chosen=1, key='skip6')
-        self.skipconnect7 = InputChoice(n_candidates=2, n_chosen=1, key='skip7')
-        self.skipconnect8 = InputChoice(n_candidates=2, n_chosen=1, key='skip8')
 
     def forward(self, x):
         x = F.relu(self.bn1(self.conv1(x)))
-        i = 1
+        i = 0
+        cnt = 1
         for block in self.layers:
             old_x = x
             x = block(x)
             if block.in_channels == block.out_channels:
+                i += 1
+            else:
+                i = 0
+            if i >= 2 and i % 2 == 0:
                 zero_x = torch.zeros_like(old_x)
-                skipconnect = eval('self.skipconnect{}'.format(i))
+                skipconnect = eval('self.skipconnect{}'.format(cnt))
                 skip_x = skipconnect([zero_x, old_x])
                 x = torch.add(x, skip_x)
-                i += 1
+                cnt += 1
+
         x = self.pool(x)
         x = x.view(x.size(0), -1)
         x = self.linear(x)
