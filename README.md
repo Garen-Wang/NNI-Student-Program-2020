@@ -6,9 +6,13 @@
 4. 任务完成情况：
 - [x] Task1
 - [x] Task2.1
+<<<<<<< HEAD
 - [ ] Task2.2
 - [x] Task3.1
 - [ ] Task3.2.1
 - [ ] Task3.2.2
+=======
+- [x] Task3.1
+>>>>>>> master
 - [x] Task4 项目启动报告
 5. Github Repo地址：https://github.com/Garen-Wang/NNI-Student-Program-2020

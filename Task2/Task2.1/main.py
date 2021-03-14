@@ -36,6 +36,7 @@ def train(trainloader, path):
     neuralnet = NeuralNet()
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(neuralnet.parameters(), lr=0.001, momentum=0.9)
+    neuralnet.train()
     for epoch in range(10):
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
@@ -60,6 +61,7 @@ def test(testloader, path, classes):
     neuralnet.load_state_dict(torch.load(path))
     class_correct = list(0.0 for i in range(10))
     class_total = list(0.0 for i in range(10))
+    neuralnet.eval()
     with torch.no_grad():
         for data in testloader:
             images, labels = data
