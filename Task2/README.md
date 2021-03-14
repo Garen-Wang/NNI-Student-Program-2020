@@ -1,5 +1,9 @@
-# Task2 进阶任务 HPO+NAS
+# Task 2 进阶任务 HPO + NAS
 
+<<<<<<< HEAD
+- [x] [Task2.1实验报告](Task2.1/README.md)
+- [x] [Task2.2实验报告](Task2.2/README.md)
+=======
 ## Task 2.1
 
 ### CIFAR10简介
@@ -215,3 +219,4 @@ Testing Finished
 ## Task 2.2
 
 to be continued...
+>>>>>>> master

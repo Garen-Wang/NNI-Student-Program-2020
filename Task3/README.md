@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+# Task3 进阶任务 Feature Engineering 实验报告
+
+- [x] [Task3.1实验报告](./Task3.1/README.md)
+- [x] [Task3.2.1实验报告](./Task3.2/Task3.2.1/README.md)
+- [ ] [Task3.2.2实验报告](./Task3.2/Task3.2.2/README.md)
+=======
 # Task 3 进阶任务
 
 ## 特征工程简介
@@ -210,3 +217,4 @@ heart数据集收集了中老年人是否患心脏病的270条数据，每条数
 [139 rows x 6 columns]
 
 ```
+>>>>>>> master

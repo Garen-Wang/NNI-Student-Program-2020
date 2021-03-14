@@ -1,5 +1,11 @@
+__pycache__
 data
 .idea
+<<<<<<< HEAD
+.empty
+.ipynb_checkpoints
+=======
 __pycache__
 .empty
 datasets
+>>>>>>> master
